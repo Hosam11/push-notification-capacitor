@@ -1,6 +1,11 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "pushApp2",
-	"webDir": "www",
-	"bundledWebRuntime": false
+  "appId": "io.ionic.starter",
+  "appName": "pushApp2",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
 }
