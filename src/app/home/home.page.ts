@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
+import {Http} from '@capacitor-community/http'
+
 import {
   ActionPerformed,
   PushNotificationSchema,
@@ -9,16 +11,19 @@ import {
 import { DetailService } from '../services/detail.service';
 import { SQLiteService } from '../services/sqlite.service';
 import { dataToImport } from '../util/import-json-utils';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
+
 export class HomePage implements OnInit, AfterViewInit {
 
+  
   constructor(
-    private _sqlite: SQLiteService,
+    private _sqlite: SQLiteService
   ) { }
 
   _database: SQLiteDBConnection;
@@ -30,6 +35,19 @@ export class HomePage implements OnInit, AfterViewInit {
 
   }
 
+
+  async getRequest(){
+    const options = {
+      url: 'https://example.com/my/api',
+      headers: { 'X-Fake-Header': 'Max was here' },
+      params: { size: 'XL' },
+    };
+    let res = await Http.get(options);
+    console.log(`status= ${res.status}, data= ${res.data}`);
+    // or
+    // const response = await Http.request({ ...options, method: 'GET' })
+
+  }
 
   async ngAfterViewInit() {
     // Initialize the CapacitorSQLite plugin
@@ -46,14 +64,6 @@ export class HomePage implements OnInit, AfterViewInit {
   async setupDatabase() {
     console.log(" setupDatabase");
 
-    // let result: any = await this._sqlite.echo("setupDatabase");
-    // console.log(" from Echo " + result.value);
-    // test Json object validity
-    // result = await this._sqlite.isJsonValid(JSON.stringify(dataToImport));
-    // if (!result.result) {
-    //   return Promise.reject(new Error("IsJsonValid failed"));
-    // }
-
     // full import
     let result: any = await this._sqlite.importFromJson(JSON.stringify(dataToImport));
     console.log(`full import result ${result.changes.changes}`);
@@ -63,7 +73,6 @@ export class HomePage implements OnInit, AfterViewInit {
         new Error("ImportFromJson 'full' dataToImport failed")
       );
     }
-
 
     // create the connection to the database
     let db = await this._sqlite.createConnection(
@@ -79,38 +88,18 @@ export class HomePage implements OnInit, AfterViewInit {
     // open db "db-from-json"
     await db.open();
 
-    /* i do NOT know what is that 
-    // create synchronization table 
-    result = await db.createSyncTable();
-    if (result.changes.changes < 0) return Promise.reject(
-      new Error("CreateSyncTable failed")
-    );
-
-
-    result = await db.getSyncDate();
-    if (result.length === 0) return Promise.reject(
-      new Error("GetSyncDate failed")
-    );
-    */
     console.log("$$ syncDate " + result);
 
     this._database = db;
   }
 
-  /*
-  id, email, name, age, last_modified
-  [1,"Whiteley.com","Whiteley",30.5,1582536810],
-  */
-
   async getAllUsers() {
 
     let allUser = await this._database.query("SELECT * FROM users;");
-    // var x = JSON.stringify(allUser.values.map(e => {
-    //  console.log
-    //   return `${e.JSON.parse().id}- `;
-    // }).toString());
-    // console.log(`x= ${x}`)
 
+    for (var i = 0; i < allUser.values.length; i++) {
+      console.log(`${allUser.values[i].id}, ${allUser.values[i].name}, ${allUser.values[i].email}, ${allUser.values[i].age}`);
+    }
     alert("allUsersLen >> " + allUser.values.length);
   }
 
@@ -118,22 +107,15 @@ export class HomePage implements OnInit, AfterViewInit {
     var age = 25;
     age += 5;
 
-    // const statement = `INSERT INTO products (name, currency, value, vendorid) 
-    // VALUES ('${name}','EUR', ${randomValue}, ${randomVendor});`;
-
     // let sqlcmd: string =
-    //   "UPDATE users SET name = ?, email = ? WHERE id = 1;";
-    // let values: Array<any> = ["updatedName", "updatedEmail"];
-
-    let sqlcmd: string =
-      "INSERT INTO users (email, name, age, last_modified) VALUES (? , ?, ?, ?); ";
-      let values = ["newEmailcom", "newName", age, 15,1590383895];
-
+    //   "INSERT INTO users (email, name, age, last_modified) VALUES (? , ?, ?, ?); ";
+    //   let values = ["newEmailcom", "newName", age, 15,1590383895];
 
     let insetUserStatment = `INSERT INTO users (email, name, age, last_modified)
     VALUES ('newEmailcom' , 'newName', '${age}', '15,1590383895');`;
     try {
       let res = await this._database.execute(insetUserStatment, false);
+      console.log(`res= ${res}`);
       alert(`insertChange =  ${res.changes.changes}`);
 
     } catch (e) {
@@ -145,9 +127,9 @@ export class HomePage implements OnInit, AfterViewInit {
   async getFirstUser() {
     let getFirstUser: string =
       "SELECT * from users  WHERE id = 1;";
-    let user = await this._database.run(getFirstUser);
+    let user = await this._database.query(getFirstUser);
 
-    alert(`userName= ${user.changes.changes[0].name}, changes= ${user.changes.changes}`);
+    alert(` changes= ${user.values.length}, userName= ${user.values[0].name}`);
   }
 
   async deleteFirstUser() {
@@ -172,7 +154,9 @@ export class HomePage implements OnInit, AfterViewInit {
     let sqlcmd: string =
       "UPDATE users SET name = ?, email = ? WHERE id = 1;";
     let values: Array<any> = ["updatedName", "updatedEmail"];
-    await this._database.run(sqlcmd, values);
+    let res = await this._database.run(sqlcmd, values);
+    alert(`updatueUser= ${res.changes.changes}`);
+
   }
 
   pushNotificationSetup(): void {
