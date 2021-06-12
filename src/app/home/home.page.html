@@ -13,34 +13,47 @@
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
+  <!-- <div id="container">
     <strong>Ready to create an app? tst </strong>
     <p>Start with Ionic <a target="_blank" 
       rel="noopener noreferrer"
        href="https://ionicframework.com/docs/components">UI Components</a></p>
   </div>
-  
+   -->
+   <div>
+    <ion-button   
+    (click)="putRejectedEntity()"  shape="round">put Request (fix/243/entity)</ion-button>
+  </div>
+
+   <div>
+    <ion-button (click)="postLoginRequest()"  shape="round">post Request (Login)</ion-button>
+  </div>
+
+   <div>
+    <ion-button (click)="getLookupsRequest()"  shape="round">get Request (Lookups)</ion-button>
+  </div>
+
     <div>
-      <ion-button (click)="getAllUsers()"  shape="round">getAllUsers</ion-button>
+      <ion-button (click)="getAllUsers()"  shape="round">get All Users</ion-button>
     </div>
   
     <div>
-      <ion-button (click)="inserNewUser()"  shape="round">inserNewUser</ion-button>
+      <ion-button (click)="inserNewUser()"  shape="round">inser New User</ion-button>
     </div>
   
     <div>
-      <ion-button (click)="getFirstUser()"  shape="round">getFirstUser</ion-button>
+      <ion-button (click)="getFirstUser()"  shape="round">get First User</ion-button>
     </div>
   
     <div>
-      <ion-button (click)="deleteFirstUser()"  shape="round">deleteFirstUser</ion-button>
+      <ion-button (click)="deleteFirstUser()"  shape="round">delete First User</ion-button>
     </div>
   
     <div>
-      <ion-button (click)="deleteAllUser()"  shape="round">deleteAllUser</ion-button>
+      <ion-button (click)="deleteAllUser()"  shape="round">delete All Users</ion-button>
     </div>
   
     <div >
-      <ion-button (click)="updateUserFirstUser()"  shape="round">updateUserFirstUser</ion-button>
+      <ion-button (click)="updateUserFirstUser()"  shape="round">update First User</ion-button>
     </div>
 </ion-content>

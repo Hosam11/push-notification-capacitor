@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
-import {Http} from '@capacitor-community/http'
+import { Http, HttpResponse } from '@capacitor-community/http';
 
 import {
   ActionPerformed,
@@ -8,10 +8,8 @@ import {
   PushNotifications,
   Token
 } from '@capacitor/push-notifications';
-import { DetailService } from '../services/detail.service';
 import { SQLiteService } from '../services/sqlite.service';
 import { dataToImport } from '../util/import-json-utils';
-import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +19,13 @@ import { HttpResponse } from '@angular/common/http';
 
 export class HomePage implements OnInit, AfterViewInit {
 
-  
+  auth = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRmU4byIsInJvbGUiOiIzIiwiU2VjdGlvbiI6IjMiLCJuYW1laWQiOiI1MyIsIlJvbGVOYW1lIjoiSW5zcGVjdG9yIiwibmJmIjoxNjE4MTMyMTIxLCJleHAiOjE2NDk2NjgxMjEsImlhdCI6MTYxODEzMjEyMX0.OMNXpVbTvN8Pf8bi7nQfoDCFIgXCSNEPr0M5OxhbiYc";
+
+  baseUrl = 'http://elmasaderclient.com:5000';
+
+  headers = { 'Authorization': this.auth };
+
+  commonHeaders = { "Content-Type": "application/json", 'Authorization': this.auth }
   constructor(
     private _sqlite: SQLiteService
   ) { }
@@ -35,20 +39,6 @@ export class HomePage implements OnInit, AfterViewInit {
 
   }
 
-
-  async getRequest(){
-    const options = {
-      url: 'https://example.com/my/api',
-      headers: { 'X-Fake-Header': 'Max was here' },
-      params: { size: 'XL' },
-    };
-    let res = await Http.get(options);
-    console.log(`status= ${res.status}, data= ${res.data}`);
-    // or
-    // const response = await Http.request({ ...options, method: 'GET' })
-
-  }
-
   async ngAfterViewInit() {
     // Initialize the CapacitorSQLite plugin
     console.log("%%%% in TestimportjsonPage this._sqlite " +
@@ -59,6 +49,70 @@ export class HomePage implements OnInit, AfterViewInit {
     } catch (e) {
       console.log(`setupDatabase failed >> ${e.message}`);
     }
+  }
+
+
+  async getLookupsRequest() {
+    console.log('getLookupsRequest');
+
+    let url = `${this.baseUrl}/Lookups/ScanApp`;
+    const options = {
+      url: url,
+      headers: this.headers,
+    };
+    // VIP hint: in docs they type the line below
+    // const response: HttpResponse = await Http.post(options);
+    // it's not work anymore do NOT use it 
+    let res: HttpResponse = await Http.request({ ...options, method: 'GET' });
+    alert(`status= ${res.status}, lookupesLen= ${res.data['Data'].length}`);
+    console.log(`status= ${res.status}, data= ${res.data['Data'].length}`);
+  }
+
+  async postLoginRequest() {
+    console.log('postLoginRequest');
+
+    let url = `${this.baseUrl}/User/Login`;
+
+    let body = {
+      "Username": "fe8o",
+      "Password": "1234567"
+    };
+
+    /*{ "Authorization": this.auth,
+        "Content-Type": "application/json"}*/
+    const options = {
+      url: url,
+      headers: this.commonHeaders,
+      data: body,
+    };
+    console.log(`options= ${options}`);
+    const res: HttpResponse = await Http.request({ ...options, method: 'POST' });
+    alert(`status= ${res.status}, userId= ${res.data['Id']}, userName= ${res.data['Fullname']}`);
+
+  }
+
+  async putRejectedEntity() {
+    let url = `${this.baseUrl}/gasStations/fix/243`;
+    let body = {
+      "PlateName": "سهل ",
+      "FK_StationCategoryId": 2,
+      "FK_GasStationStatusId": 1,
+      "FK_DistrictId": 2386,
+      "EnvDescriptionNorth": "شارع رئيسي ",
+      "EnvDescriptionSouth": "شارع فرعي",
+      "EnvDescriptionEast": "شارع رئيسي ",
+      "EnvDescriptionWest": "مركز تسوق "
+    };
+    const options = {
+      url: url,
+      headers: this.commonHeaders,
+      data: body,
+    };
+    const res: HttpResponse = await Http.request({ ...options, method: 'PUT' });
+
+    alert(`status= ${res.status}, Message= ${res.data['Message']}`);
+
+
   }
 
   async setupDatabase() {
