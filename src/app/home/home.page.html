@@ -1,8 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title> Blank </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -20,40 +18,76 @@
        href="https://ionicframework.com/docs/components">UI Components</a></p>
   </div>
    -->
-   <div>
-    <ion-button   
-    (click)="putRejectedEntity()"  shape="round">put Request (fix/243/entity)</ion-button>
+  <div>
+    <ion-button (click)="addPhotoToGallery()">
+      <ion-icon name="camera"></ion-icon>
+    </ion-button>
   </div>
 
-   <div>
-    <ion-button (click)="postLoginRequest()"  shape="round">post Request (Login)</ion-button>
+  <div>
+    <ion-grid>
+      <ion-row>
+        <ion-col
+          size="6"
+          *ngFor="let photo of photoService.photos; index as position"
+        >
+          <ion-img [src]="photo.webviewPath"></ion-img>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  
+    <!-- ion-fab markup  -->
   </div>
 
-   <div>
-    <ion-button (click)="getLookupsRequest()"  shape="round">get Request (Lookups)</ion-button>
+  <div>
+    <ion-button (click)="putRejectedEntity()" shape="round"
+      >put Request (fix/243/entity)</ion-button
+    >
   </div>
 
-    <div>
-      <ion-button (click)="getAllUsers()"  shape="round">get All Users</ion-button>
-    </div>
-  
-    <div>
-      <ion-button (click)="inserNewUser()"  shape="round">inser New User</ion-button>
-    </div>
-  
-    <div>
-      <ion-button (click)="getFirstUser()"  shape="round">get First User</ion-button>
-    </div>
-  
-    <div>
-      <ion-button (click)="deleteFirstUser()"  shape="round">delete First User</ion-button>
-    </div>
-  
-    <div>
-      <ion-button (click)="deleteAllUser()"  shape="round">delete All Users</ion-button>
-    </div>
-  
-    <div >
-      <ion-button (click)="updateUserFirstUser()"  shape="round">update First User</ion-button>
-    </div>
+  <div>
+    <ion-button (click)="postLoginRequest()" shape="round"
+      >post Request (Login)</ion-button
+    >
+  </div>
+
+  <div>
+    <ion-button (click)="getLookupsRequest()" shape="round"
+      >get Request (Lookups)</ion-button
+    >
+  </div>
+
+  <div>
+    <ion-button (click)="getAllUsers()" shape="round">get All Users</ion-button>
+  </div>
+
+  <div>
+    <ion-button (click)="inserNewUser()" shape="round"
+      >inser New User</ion-button
+    >
+  </div>
+
+  <div>
+    <ion-button (click)="getFirstUser()" shape="round"
+      >get First User</ion-button
+    >
+  </div>
+
+  <div>
+    <ion-button (click)="deleteFirstUser()" shape="round"
+      >delete First User</ion-button
+    >
+  </div>
+
+  <div>
+    <ion-button (click)="deleteAllUser()" shape="round"
+      >delete All Users</ion-button
+    >
+  </div>
+
+  <div>
+    <ion-button (click)="updateUserFirstUser()" shape="round"
+      >update First User</ion-button
+    >
+  </div>
 </ion-content>

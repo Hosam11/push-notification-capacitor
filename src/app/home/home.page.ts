@@ -10,6 +10,7 @@ import {
 } from '@capacitor/push-notifications';
 import { SQLiteService } from '../services/sqlite.service';
 import { dataToImport } from '../util/import-json-utils';
+import { PhotoService } from '../services/photo.service';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,8 @@ export class HomePage implements OnInit, AfterViewInit {
 
   commonHeaders = { "Content-Type": "application/json", 'Authorization': this.auth }
   constructor(
-    private _sqlite: SQLiteService
+    private _sqlite: SQLiteService,
+    private photoService: PhotoService
   ) { }
 
   _database: SQLiteDBConnection;
@@ -51,7 +53,9 @@ export class HomePage implements OnInit, AfterViewInit {
     }
   }
 
-
+addPhotoToGallery() {
+  this.photoService.addNewToGallery();
+}
   async getLookupsRequest() {
     console.log('getLookupsRequest');
 
@@ -250,5 +254,7 @@ export class HomePage implements OnInit, AfterViewInit {
       }
     );
   }
+
+
 
 }
