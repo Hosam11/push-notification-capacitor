@@ -41,7 +41,7 @@ export class PhotoService {
     // console.log(`imgPath- base64StringLen= ${capturedPhoto.base64String?.length}`);
 
     this.photos.unshift({
-      filepath: imgName,
+      filepath: capturedPhoto.path ?? imgName,
       webviewPath: capturedPhoto.webPath
     });
 
@@ -77,8 +77,6 @@ export class PhotoService {
     photoFormat= ${photo.format},
     path= ${path}`);
 
-
-
     // const reader = new FileReader();
     // reader.onload = () => {
     //   //   const formData = new FormData();
@@ -94,9 +92,9 @@ export class PhotoService {
     // formData.append('file', path);
     // formData.append("Image", file, fileName + "." + file.type.substring(6, 10));
 
-    
     const options = {
-      url: 'http://elmasaderclient.com:5000/upload/File',
+      // 46.151.213.154
+      url: 'http://46.151.213.154:5000/upload/File',
       name: photoName,
       filePath: path,
       // data:formData,
@@ -108,7 +106,7 @@ export class PhotoService {
     };
     // fileDirectory: FilesystemDirectory.Downloads,
     const res = await Http.uploadFile(options);
-    console.log(`status ${res.status}, data= ${JSON.stringify(res)}` );
+    console.log(`status ${res.status}` );
     // alert(`status ${res.status}, data= ${JSON.stringify(res)} `);
   }
 
